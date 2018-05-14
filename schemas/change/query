@@ -1,0 +1,36 @@
+## author sidler@mozilla.com
+
+REST: https://mozilla.service.now/api/v1
+
+method: GET
+url:    /change
+        /change/{change_id}
+
+json request:
+    N/A
+
+json response:
+    "changes": [
+        {
+            "type": String,
+            "summary": String,
+            "description": String,
+            "category": String,
+            "assigned_group": String,
+            "assigned_user": String,
+            "business_impact": Integer,
+            "business_services": [String],
+            "change_plan": String,
+            "backout_plan": String,
+            "test_plan": String,
+            "communication_plan": String,
+            "planned_start": Date,
+            "planned_stop": Date,
+            "tcw": Boolean,
+            "bugzilla_link": String,
+            "cab_required": Boolean,
+            "cab_date": Date,
+            "cab_recommendation": String,
+            "cab_delegate": User,
+        },
+    ]
