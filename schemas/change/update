@@ -30,6 +30,7 @@ json request:
 json response:
     "changes": [
         {
+            "id": Integer,
             "type": String,
             "summary": String,
             "description": String,
