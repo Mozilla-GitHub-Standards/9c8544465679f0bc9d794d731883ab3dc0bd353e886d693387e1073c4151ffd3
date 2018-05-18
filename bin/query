@@ -1,15 +1,1 @@
-#!/bin/bash
-
-if [ -n "$DEBUG" ]; then
-    PS4=':${LINENO}+'
-    set -x
-fi
-
-REST_API="http://localhost:5000"
-REST_PATH="change"
-if [ -n "$1" ]; then
-    REST_PATH+="/$1"
-fi
-
-curl -X GET "$REST_API/$REST_PATH" \
-    -H "Content-Type: application/json"
+create
