@@ -1,0 +1,58 @@
+#!/bin/bash
+
+if [ -n "$DEBUG" ]; then
+    PS4=':${LINENO}+'
+    set -x
+fi
+
+TARGET_NAME="$(basename "$0")"
+
+usage() {
+    echo "usage"
+    exit -1
+}
+
+word() {
+    #grab random word
+    WORD=`shuf -n1 /usr/share/dict/words`
+
+    #trim apostrophes
+    WORD="${WORD%\'*}"
+
+    #lowercase
+    WORD="${WORD,,}"
+    echo $WORD
+}
+
+combo() {
+    COUNT="${1:-2}"
+    COMBO="$(word)"
+    for ((i=1; i<$COUNT; i++)); do
+        COMBO+="-$(word)"
+    done
+    echo "$COMBO"
+}
+
+phrase() {
+    COUNT="${1:-2}"
+    PHRASE="$(word)"
+    for ((i=1; i<$COUNT; i++)); do
+        PHRASE+=" $(word)"
+    done
+    echo "$PHRASE"
+}
+
+case "$TARGET_NAME" in
+    word)
+        word
+        ;;
+    combo)
+        combo "$@"
+        ;;
+    phrase)
+        phrase "$@"
+        ;;
+    *)
+        usage
+        ;;
+esac

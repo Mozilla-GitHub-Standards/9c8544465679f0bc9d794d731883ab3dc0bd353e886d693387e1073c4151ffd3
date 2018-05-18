@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ -n "$DEBUG" ]; then
+    PS4=':${LINENO}+'
+    set -x
+fi
+
+REST_API="http://localhost:5000"
+
+if [ -n "$1" ]; then
+    REST_PATH+="/$1"
+fi
+
+curl -X DELETE "$REST_API/nuke" \
+    -H "Content-Type: application/json"

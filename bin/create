@@ -1,0 +1,42 @@
+#!/bin/bash
+
+if [ -n "$DEBUG" ]; then
+    PS4=':${LINENO}+'
+    set -x
+fi
+
+REST_API="http://localhost:5000"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+rand() {
+    MIN="$1"
+    MAX="$2"
+    echo "$(shuf -i "$MIN-$MAX" -n 1)"
+}
+
+
+START="$(rand 1 10)"
+DURATION="$(rand 1 4)"
+STOP="$(($START + $DURATION))"
+
+curl -X POST $REST_API/change/create \
+    -H "Content-Type: application/json" \
+    -d @- << EOF
+{
+    "summary": "$($DIR/phrase "$(rand 3 5)")",
+    "description": "$($DIR/phrase "$(rand 6 10)")",
+    "category": "$($DIR/combo)",
+    "assigned_group": "$($DIR/combo)",
+    "assigned_user": "$($DIR/word)",
+    "business_impact": "$($DIR/combo)",
+    "business_services": "$($DIR/combo)",
+    "change_plan": "$($DIR/phrase "$(rand 5 10)")",
+    "backout_plan": "$($DIR/phrase "$(rand 5 10)")",
+    "test_plan": "$($DIR/phrase "$(rand 5 10)")",
+    "communication_plan": "$($DIR/phrase "$(rand 5 10)")",
+    "planned_start": "$(date -d "+$START hour" --iso-8601=seconds)",
+    "planned_stop": "$(date -d "+$STOP hour" --iso-8601=seconds)",
+    "tcw": false,
+    "bugzilla_link": "https://bugzilla.mozilla.org/show_bug.cgi?id=$(rand 1400000 1470000)"
+}
+EOF
