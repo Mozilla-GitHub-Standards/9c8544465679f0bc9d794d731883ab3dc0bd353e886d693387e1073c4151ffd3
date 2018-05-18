@@ -53,7 +53,6 @@ def about():
 @app.route('/change', methods=['GET'], defaults={'id': None})
 @app.route('/change/<id>', methods=['GET'])
 def query(id=None):
-    stderr('id =', id)
     if id is None:
         changes = list(mongo.db.changes.find())
     else:
