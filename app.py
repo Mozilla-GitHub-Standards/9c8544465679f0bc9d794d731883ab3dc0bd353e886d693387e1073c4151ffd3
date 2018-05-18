@@ -7,6 +7,7 @@ import sys
 sys.dont_write_bytecode = True
 
 from ruamel import yaml
+from random import randint
 from subprocess import check_output
 from flask import Flask, request, jsonify
 from flask_pymongo import PyMongo
@@ -21,6 +22,14 @@ app.config['MONGO_URI'] = 'mongodb://localhost:27017/' + DBNAME
 
 mongo = PyMongo(app)
 
+CHANGE_TYPES = [
+    'emergency',
+    'routine',
+    'standard',
+    'normal',
+    'comprehensive',
+]
+
 class MissingJsonError(Exception):
     pass
 
@@ -33,6 +42,9 @@ def response(changes):
 
 def stderr(*items):
     print(' '.join([repr(item) for item in items]), file=sys.stderr)
+
+def calculate_type(json):
+    return CHANGE_TYPES[randint(0,len(CHANGE_TYPES)-1)]
 
 def unique_id():
     return str(mongo.db.seqs.find_and_modify(
@@ -48,7 +60,7 @@ def setup_db():
 
 @app.route('/')
 def about():
-    return 'MozSM REST api\n'
+    return 'MozSM REST api ftw! ;)\n'
 
 @app.route('/change', methods=['GET'], defaults={'id': None})
 @app.route('/change/<id>', methods=['GET'])
@@ -66,6 +78,7 @@ def create():
         raise MissingJsonError
 
     json['id'] = unique_id()
+    json['type'] = json.get('type', calculate_type(json))
     _id = mongo.db.changes.insert(json)
     change = mongo.db.changes.find_one(dict(_id=_id))
     return response([change])
