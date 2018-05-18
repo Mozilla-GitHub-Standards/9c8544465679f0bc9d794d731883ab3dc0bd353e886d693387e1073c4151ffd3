@@ -47,12 +47,12 @@ def calculate_type(json):
     return CHANGE_TYPES[randint(0,len(CHANGE_TYPES)-1)]
 
 def unique_id():
-    return str(mongo.db.seqs.find_and_modify(
+    return mongo.db.seqs.find_and_modify(
         query={ 'collection' : 'changes' },
         update={'$inc': {'id': 1}},
         fields={'id': 1, '_id': 0},
         new=True
-    ).get('id'))
+    ).get('id')
 
 @app.before_first_request
 def setup_db():
@@ -68,7 +68,7 @@ def query(id=None):
     if id is None:
         changes = list(mongo.db.changes.find())
     else:
-        changes = [mongo.db.changes.find_one_or_404({'id': id})]
+        changes = [mongo.db.changes.find_one_or_404({'id': int(id)})]
     return response(changes)
 
 @app.route('/change/create', methods=['POST'])
